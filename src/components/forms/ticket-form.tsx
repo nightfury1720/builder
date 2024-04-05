@@ -45,6 +45,7 @@ import {
   CommandGroup,
   CommandInput,
   CommandItem,
+  CommandList
 } from "../ui/command";
 import { cn } from "@/lib/utils";
 import Loading from "../global/loading";
@@ -66,7 +67,7 @@ const TicketForm = ({ getNewTicket, laneId, subaccountId }: Props) => {
   const saveTimerRef = useRef<ReturnType<typeof setTimeout>>();
   const [allTeamMembers, setAllTeamMembers] = useState<User[]>([]);
   const [assignedTo, setAssignedTo] = useState(
-    defaultData.ticket?.Assigned?.id || "",
+    defaultData.ticket?.Assigned?.id || ""
   );
   const form = useForm<z.infer<typeof TicketFormSchema>>({
     mode: "onChange",
@@ -102,7 +103,7 @@ const TicketForm = ({ getNewTicket, laneId, subaccountId }: Props) => {
       const fetchData = async () => {
         const response = await searchContacts(
           //@ts-ignore
-          defaultData.ticket?.Customer?.name,
+          defaultData.ticket?.Customer?.name
         );
         setContactList(response);
       };
@@ -121,7 +122,7 @@ const TicketForm = ({ getNewTicket, laneId, subaccountId }: Props) => {
           assignedUserId: assignedTo,
           ...(contact ? { customerId: contact } : {}),
         },
-        tags,
+        tags
       );
 
       await saveActivityLogsNotification({
@@ -272,7 +273,7 @@ const TicketForm = ({ getNewTicket, laneId, subaccountId }: Props) => {
                       saveTimerRef.current = setTimeout(async () => {
                         const response = await searchContacts(
                           //@ts-ignore
-                          value.target.value,
+                          value.target.value
                         );
                         setContactList(response);
                         setSearch("");
@@ -281,25 +282,27 @@ const TicketForm = ({ getNewTicket, laneId, subaccountId }: Props) => {
                   />
                   <CommandEmpty>No Customer found.</CommandEmpty>
                   <CommandGroup>
-                    {contactList.map((c) => (
-                      <CommandItem
-                        key={c.id}
-                        value={c.id}
-                        onSelect={(currentValue) => {
-                          setContact(
-                            currentValue === contact ? "" : currentValue,
-                          );
-                        }}
-                      >
-                        {c.name}
-                        <CheckIcon
-                          className={cn(
-                            "ml-auto h-4 w-4",
-                            contact === c.id ? "opacity-100" : "opacity-0",
-                          )}
-                        />
-                      </CommandItem>
-                    ))}
+                    <CommandList>
+                      {contactList.map((c) => (
+                        <CommandItem
+                          key={c.id}
+                          value={c.id}
+                          onSelect={(currentValue) => {
+                            setContact(
+                              currentValue === contact ? "" : currentValue
+                            );
+                          }}
+                        >
+                          {c.name}
+                          <CheckIcon
+                            className={cn(
+                              "ml-auto h-4 w-4",
+                              contact === c.id ? "opacity-100" : "opacity-0"
+                            )}
+                          />
+                        </CommandItem>
+                      ))}
+                    </CommandList>
                   </CommandGroup>
                 </Command>
               </PopoverContent>

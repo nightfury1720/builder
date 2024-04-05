@@ -122,25 +122,20 @@ const AgencyDetails = ({ data }: Props) => {
           },
         };
 
-        // const customerResponse = await fetch("/api/stripe/create-customer", {
-        //   method: "POST",
-        //   headers: {
-        //     "Content-Type": "application/json",
-        //   },
-        //   body: JSON.stringify(bodyData),
-        // });
-
-        // if (!customerResponse.ok) {
-        //   throw new Error("Failed to create customer bad api response");
-        // }
-
-        // const customerData: { customerId: string } =
-        //   await customerResponse.json();
-        // custId = customerData.customerId;
+        const customerResponse = await fetch("/api/stripe/create-customer", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(bodyData),
+        });
+        const customerData: { customerId: string } =
+          await customerResponse.json();
+        custId = customerData.customerId;
+        console.log("stripe", customerResponse);
       }
-
       newUserData = await initUser({ role: "AGENCY_OWNER" });
-      // if (!data?.customerId && !custId) return;
+      if (!data?.customerId && !custId) return;
 
       const response = await upsertAgency({
         id: data?.id ? data.id : v4(),
@@ -160,20 +155,10 @@ const AgencyDetails = ({ data }: Props) => {
         connectAccountId: "",
         goal: 5,
       });
-
-      if (!response) {
-        throw new Error("Failed to create agency");
-      }
-
-      console.log("debug response", response);
       toast({
         title: "Created Agency",
       });
-
-      return router.refresh();
-      if (data?.id) {
-        return router.refresh();
-      }
+      if (data?.id) return router.refresh();
       if (response) {
         return router.refresh();
       }
