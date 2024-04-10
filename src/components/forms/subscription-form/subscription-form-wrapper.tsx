@@ -22,7 +22,7 @@ const SubscriptionFormWrapper = ({ customerId, planExists }: Props) => {
   const { data, setClose } = useModal();
   const router = useRouter();
   const [selectedPriceId, setSelectedPriceId] = useState<Plan | "">(
-    data?.plans?.defaultPriceId || "",
+    data?.plans?.defaultPriceId || ""
   );
   const [subscription, setSubscription] = useState<{
     subscriptionId: string;
@@ -36,7 +36,7 @@ const SubscriptionFormWrapper = ({ customerId, planExists }: Props) => {
         theme: "flat",
       },
     }),
-    [subscription],
+    [subscription]
   );
 
   useEffect(() => {
@@ -53,7 +53,7 @@ const SubscriptionFormWrapper = ({ customerId, planExists }: Props) => {
             customerId,
             priceId: selectedPriceId,
           }),
-        },
+        }
       );
       const subscriptionResponseData = await subscriptionResponse.json();
       setSubscription({
@@ -102,7 +102,6 @@ const SubscriptionFormWrapper = ({ customerId, planExists }: Props) => {
             )}
           </Card>
         ))}
-
         {options.clientSecret && !planExists && (
           <>
             <h1 className="text-xl">Payment Method</h1>
@@ -111,7 +110,6 @@ const SubscriptionFormWrapper = ({ customerId, planExists }: Props) => {
             </Elements>
           </>
         )}
-
         {!options.clientSecret && selectedPriceId && (
           <div className="flex items-center justify-center w-full h-40">
             <Loading />
