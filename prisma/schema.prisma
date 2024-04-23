@@ -1,6 +1,6 @@
 datasource db {
-  provider     = "mysql"
-  url          = env("DATABASE_URL")
+  provider     = "postgresql"
+  url          = env("PROD_DATABASE_URL")
   relationMode = "prisma"
 }
 
@@ -51,10 +51,10 @@ enum Icon {
 model User {
   id           String         @id @default(uuid())
   name         String
-  avatarUrl    String         @db.Text
+  avatarUrl    String
   email        String         @unique
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
+  createdAt    DateTime       @default(now()) @db.Timestamp
+  updatedAt    DateTime       @updatedAt @db.Timestamp
   role         Role           @default(SUBACCOUNT_USER)
   agencyId     String?
   Agency       Agency?        @relation(fields: [agencyId], references: [id], onDelete: Cascade)
@@ -82,8 +82,8 @@ model Agency {
   connectAccountId String?               @default("")
   customerId       String                @default("")
   name             String
-  agencyLogo       String                @db.Text
-  companyEmail     String                @db.Text
+  agencyLogo       String
+  companyEmail     String
   companyPhone     String
   whiteLabel       Boolean               @default(true)
   address          String
@@ -93,8 +93,8 @@ model Agency {
   country          String
   goal             Int                   @default(5)
   users            User[]
-  createdAt        DateTime              @default(now())
-  updatedAt        DateTime              @updatedAt
+  createdAt        DateTime              @default(now()) @db.Timestamp
+  updatedAt        DateTime              @updatedAt @db.Timestamp
   SubAccount       SubAccount[]
   SidebarOption    AgencySidebarOption[]
   Invitation       Invitation[]
@@ -107,10 +107,10 @@ model SubAccount {
   id               String                    @id @default(uuid())
   connectAccountId String?                   @default("")
   name             String
-  subAccountLogo   String                    @db.Text
-  createdAt        DateTime                  @default(now())
-  updatedAt        DateTime                  @updatedAt
-  companyEmail     String                    @db.Text
+  subAccountLogo   String
+  createdAt        DateTime                  @default(now()) @db.Timestamp
+  updatedAt        DateTime                  @updatedAt @db.Timestamp
+  companyEmail     String
   companyPhone     String
   goal             Int                       @default(5)
   address          String
@@ -138,8 +138,8 @@ model Tag {
   id           String   @id @default(uuid())
   name         String
   color        String
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  createdAt    DateTime @default(now()) @db.Timestamp
+  updatedAt    DateTime @updatedAt @db.Timestamp
   subAccountId String
 
   SubAccount SubAccount @relation(fields: [subAccountId], references: [id], onDelete: Cascade)
@@ -151,8 +151,8 @@ model Tag {
 model Pipeline {
   id           String     @id @default(uuid())
   name         String
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
+  createdAt    DateTime   @default(now()) @db.Timestamp
+  updatedAt    DateTime   @updatedAt @db.Timestamp
   Lane         Lane[]
   SubAccount   SubAccount @relation(fields: [subAccountId], references: [id], onDelete: Cascade)
   subAccountId String
@@ -163,8 +163,8 @@ model Pipeline {
 model Lane {
   id         String   @id @default(uuid())
   name       String
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  createdAt  DateTime @default(now()) @db.Timestamp
+  updatedAt  DateTime @updatedAt @db.Timestamp
   Pipeline   Pipeline @relation(fields: [pipelineId], references: [id], onDelete: Cascade)
   pipelineId String
   Tickets    Ticket[]
@@ -176,8 +176,8 @@ model Lane {
 model Ticket {
   id          String   @id @default(uuid())
   name        String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime @default(now()) @db.Timestamp
+  updatedAt   DateTime @updatedAt @db.Timestamp
   laneId      String
   order       Int      @default(0)
   Lane        Lane     @relation(fields: [laneId], references: [id], onDelete: Cascade)
@@ -204,8 +204,8 @@ model Trigger {
   id           String       @id @default(uuid())
   name         String
   type         TriggerTypes
-  createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @updatedAt
+  createdAt    DateTime     @default(now()) @db.Timestamp
+  updatedAt    DateTime     @updatedAt @db.Timestamp
   subAccountId String
   Subaccount   SubAccount   @relation(fields: [subAccountId], references: [id], onDelete: Cascade)
   Automations  Automation[]
@@ -216,8 +216,8 @@ model Trigger {
 model Automation {
   id                 String               @id @default(uuid())
   name               String
-  createdAt          DateTime             @default(now())
-  updatedAt          DateTime             @updatedAt
+  createdAt          DateTime             @default(now()) @db.Timestamp
+  updatedAt          DateTime             @updatedAt @db.Timestamp
   triggerId          String?
   published          Boolean              @default(false)
   Trigger            Trigger?             @relation(fields: [triggerId], references: [id], onDelete: Cascade)
@@ -232,8 +232,8 @@ model Automation {
 
 model AutomationInstance {
   id           String     @id @default(uuid())
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
+  createdAt    DateTime   @default(now()) @db.Timestamp
+  updatedAt    DateTime   @updatedAt @db.Timestamp
   automationId String
   Automation   Automation @relation(fields: [automationId], references: [id], onDelete: Cascade)
   active       Boolean    @default(false)
@@ -249,8 +249,8 @@ model Action {
   id           String     @id @default(uuid())
   name         String
   type         ActionType
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
+  createdAt    DateTime   @default(now()) @db.Timestamp
+  updatedAt    DateTime   @updatedAt @db.Timestamp
   automationId String
   order        Int
   Automation   Automation @relation(fields: [automationId], references: [id], onDelete: Cascade)
@@ -263,8 +263,8 @@ model Contact {
   id           String   @id @default(uuid())
   name         String
   email        String
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  createdAt    DateTime @default(now()) @db.Timestamp
+  updatedAt    DateTime @updatedAt @db.Timestamp
   subAccountId String
 
   Subaccount SubAccount @relation(fields: [subAccountId], references: [id], onDelete: Cascade)
@@ -279,8 +279,8 @@ model Media {
   name         String
   link         String     @unique
   subAccountId String
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
+  createdAt    DateTime   @default(now()) @db.Timestamp
+  updatedAt    DateTime   @updatedAt @db.Timestamp
   Subaccount   SubAccount @relation(fields: [subAccountId], references: [id], onDelete: Cascade)
 
   @@index([subAccountId])
@@ -289,8 +289,8 @@ model Media {
 model Funnel {
   id            String       @id @default(uuid())
   name          String
-  createdAt     DateTime     @default(now())
-  updatedAt     DateTime     @updatedAt
+  createdAt     DateTime     @default(now()) @db.Timestamp
+  updatedAt     DateTime     @updatedAt @db.Timestamp
   description   String?
   published     Boolean      @default(false)
   subDomainName String?      @unique
@@ -308,10 +308,10 @@ model ClassName {
   id         String   @id @default(uuid())
   name       String
   color      String
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  createdAt  DateTime @default(now()) @db.Timestamp
+  updatedAt  DateTime @updatedAt @db.Timestamp
   funnelId   String
-  customData String?  @db.LongText
+  customData String?  @db.Text
   Funnel     Funnel   @relation(fields: [funnelId], references: [id], onDelete: Cascade)
 
   @@index([funnelId])
@@ -321,10 +321,10 @@ model FunnelPage {
   id           String   @id @default(uuid())
   name         String
   pathName     String   @default("")
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  createdAt    DateTime @default(now()) @db.Timestamp
+  updatedAt    DateTime @updatedAt @db.Timestamp
   visits       Int      @default(0)
-  content      String?  @db.LongText
+  content      String?  @db.Text
   order        Int
   previewImage String?  @db.Text
   funnelId     String
@@ -340,8 +340,8 @@ model AgencySidebarOption {
   icon      Icon     @default(info)
   agencyId  String
   Agency    Agency?  @relation(fields: [agencyId], references: [id], onDelete: Cascade)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now()) @db.Timestamp
+  updatedAt DateTime @updatedAt @db.Timestamp
 
   @@index([agencyId])
 }
@@ -351,8 +351,8 @@ model SubAccountSidebarOption {
   name         String      @default("Menu")
   link         String      @default("#")
   icon         Icon        @default(info)
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
+  createdAt    DateTime    @default(now()) @db.Timestamp
+  updatedAt    DateTime    @updatedAt @db.Timestamp
   SubAccount   SubAccount? @relation(fields: [subAccountId], references: [id], onDelete: Cascade)
   subAccountId String?
 
@@ -387,8 +387,8 @@ model Notification {
   Agency     Agency      @relation(fields: [agencyId], references: [id], onDelete: Cascade)
   SubAccount SubAccount? @relation(fields: [subAccountId], references: [id], onDelete: Cascade)
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now()) @db.Timestamp
+  updatedAt DateTime @updatedAt @db.Timestamp
 
   @@index([agencyId])
   @@index([subAccountId])
@@ -402,8 +402,8 @@ enum Plan {
 
 model Subscription {
   id        String   @id @default(uuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now()) @db.Timestamp
+  updatedAt DateTime @updatedAt @db.Timestamp
   plan      Plan?
   price     String?
   active    Boolean  @default(false)
@@ -421,8 +421,8 @@ model Subscription {
 
 model AddOns {
   id        String   @id @default(uuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now()) @db.Timestamp
+  updatedAt DateTime @updatedAt @db.Timestamp
   name      String
   active    Boolean  @default(false)
   priceId   String   @unique
