@@ -15,7 +15,7 @@ import Link from "next/link";
 
 export default async function Home() {
   const prices = await stripe.prices.list({
-    product: process.env.NEXT_PLURA_PRODUCT_ID,
+    product: process.env.NEXT_BUILDER_PRODUCT_ID,
     active: true,
   });
 
@@ -29,17 +29,10 @@ export default async function Home() {
         <p className="text-center">Run your agency, in one place</p>
         <div className="bg-gradient-to-r from-primary to-secondary-foreground text-transparent bg-clip-text relative">
           <h1 className="text-9xl font-bold text-center md:text-[300px]">
-            Plura
+            Builder
           </h1>
         </div>
         <div className="flex justify-center items-center relative md:mt-[-70px]">
-          <Image
-            src={"/assets/preview.png"}
-            alt="banner image"
-            height={1200}
-            width={1200}
-            className="rounded-tl-2xl rounded-tr-2xl border-2 border-muted"
-          />
           <div className="bottom-0 top-[50%] bg-gradient-to-t dark:from-background left-0 right-0 absolute z-10"></div>
         </div>
       </section>
@@ -51,7 +44,7 @@ export default async function Home() {
           ready to commit you can get started for free.
         </p>
         <div className="flex  justify-center gap-4 flex-wrap mt-6">
-          {prices.data.map((card) => (
+          {/* {prices.data.map((card) => (
             //WIP: Wire up free product from stripe
             <Card
               key={card.nickname}
@@ -107,13 +100,10 @@ export default async function Home() {
                 </Link>
               </CardFooter>
             </Card>
-          ))}
-          <Card className={clsx("w-[300px] flex flex-col justify-between")}>
+          ))} */}
+          <Card className={clsx("w-[300px] flex flex-col justify-between text-blue")}>
             <CardHeader>
               <CardTitle
-                className={clsx({
-                  "text-muted-foreground": true,
-                })}
               >
                 {pricingCards[0].title}
               </CardTitle>
@@ -137,10 +127,7 @@ export default async function Home() {
               <Link
                 href="/agency"
                 className={clsx(
-                  "w-full text-center bg-primary p-2 rounded-md",
-                  {
-                    "!bg-muted-foreground": true,
-                  }
+                  "w-full text-center bg-primary p-2 rounded-md"
                 )}
               >
                 Get Started

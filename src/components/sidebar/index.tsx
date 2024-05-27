@@ -56,14 +56,14 @@ const Sidebar = async ({ id, type }: Props) => {
         subAccounts={subaccounts}
         user={user}
       />
-      <MenuOptions
+      {/* <MenuOptions
         details={details}
         id={id}
         sidebarLogo={sideBarLogo}
         sidebarOpt={sidebarOpt}
         subAccounts={subaccounts}
         user={user}
-      />
+      /> */}
     </>
   );
 };
